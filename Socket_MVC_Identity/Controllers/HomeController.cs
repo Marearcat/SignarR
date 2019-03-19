@@ -5,6 +5,7 @@ using Socket_MVC_Identity.Data;
 using Socket_MVC_Identity.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 namespace Socket_MVC_Identity.Controllers
 {
@@ -17,10 +18,10 @@ namespace Socket_MVC_Identity.Controllers
             _userManager = userManager;
             context = new ApplicationDbContext(ApplicationDbContext.Opts());
         }
-        [Authorize]
-        [Authorize(Roles = "chat")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            ViewData["InChat"] = await _userManager.IsInRoleAsync(user, "chat");
             return View();
         }
 

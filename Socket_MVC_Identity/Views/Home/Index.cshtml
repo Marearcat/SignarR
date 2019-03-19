@@ -6,12 +6,21 @@
     <div class="row">&nbsp;</div>
     <div class="row">
         <div class="col-6">&nbsp;</div>
-        <div class="col-6">
-            <input type="hidden" id="userInput" value="@User.Identity.Name"/>
-            <br />
-            Message : <input type="text" id="messageInput" />
-            <input type="button" id="sendButton" value="Send Message" />
-        </div>
+        @if (ViewData["InChat"].Equals(true))
+        {
+            <div class="col-6">
+                <input type="hidden" id="userInput" value="@User.Identity.Name" />
+                <br />
+                Message : <input type="text" id="messageInput" />
+                <input type="button" id="sendButton" value="Send Message" />
+            </div>
+        }
+        else
+        {
+            <div class="col-6">
+                <h4>You are not in chat</h4>
+            </div>
+        }
     </div>
     <div class="row">
         <div class="col-12">
