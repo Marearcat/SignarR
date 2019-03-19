@@ -27,21 +27,28 @@ namespace Socket_MVC_Identity.Controllers
             return RedirectPermanent("~/home/index");
         }
 
-        //[Authorize(Roles = "admin")]
-        public ActionResult AddInChat()
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult> AddInChat()
         {
-            var users = context.Users.Where(x => !_userManager.IsInRoleAsync(x, "chat").Result);
-            var model = users.Select(x => x.UserName);
+            var users = context.Users;
+            var model = new List<IdentityUser>();
+            foreach(var user in users)
+            {
+                bool inRole = await _userManager.IsInRoleAsync(user, "chat");
+                if (!inRole)
+                    model.Add(user);
+            }
             return View(model);
         }
         [HttpPost]
-        //[Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> AddInChat(string name)
         {
+            
             try
             {
                 var user = await _userManager.FindByNameAsync(name);
-                await _userManager.AddToRoleAsync(user, "admin");
+                await _userManager.AddToRoleAsync(user, "chat");
                 //context.UserRoles.Add(new IdentityUserRole<string> { RoleId = "72b51e3c-6c5e-4bb9-8361-86cb682fe118", UserId = user.Id });
                 //context.SaveChanges();
                 return RedirectToAction(nameof(Index));
@@ -53,20 +60,26 @@ namespace Socket_MVC_Identity.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        public ActionResult RemoveFromChat()
+        public async Task<ActionResult> RemoveFromChat()
         {
-            var users = context.Users.Where(x => _userManager.IsInRoleAsync(x, "chat").Result);
-            var model = users.Select(x => x.UserName);
+            var users = context.Users;
+            var model = new List<IdentityUser>();
+            foreach (var user in users)
+            {
+                bool inRole = await _userManager.IsInRoleAsync(user, "chat");
+                if (inRole)
+                    model.Add(user);
+            }
             return View(model);
         }
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public ActionResult RemoveFromChat(string name)
+        public async Task<ActionResult> RemoveFromChat(string name)
         {
             try
             {
-                var user = context.Users.First(x => x.UserName == name);
-                _userManager.RemoveFromRoleAsync(user, "chat");
+                var user = await _userManager.FindByNameAsync(name);
+                await _userManager.RemoveFromRoleAsync(user, "chat");
                 //context.UserRoles.Remove(new IdentityUserRole<string> { RoleId = "72b51e3c-6c5e-4bb9-8361-86cb682fe118", UserId = user.Id });
                 //context.SaveChanges();
                 return RedirectToAction(nameof(Index));

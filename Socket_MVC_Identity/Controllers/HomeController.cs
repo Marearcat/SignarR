@@ -1,22 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Socket_MVC_Identity.Data;
 using Socket_MVC_Identity.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 namespace Socket_MVC_Identity.Controllers
 {
     public class HomeController : Controller
     {
         ApplicationDbContext context;
-        public HomeController()
+        private UserManager<IdentityUser> _userManager;
+        public HomeController(UserManager<IdentityUser> userManager)
         {
+            _userManager = userManager;
             context = new ApplicationDbContext(ApplicationDbContext.Opts());
         }
-
+        [Authorize]
+        [Authorize(Roles = "chat")]
         public IActionResult Index()
         {
             return View();
