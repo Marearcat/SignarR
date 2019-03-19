@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "AddInChat";
+}
+@model IQueryable<string>
+<h1>AddInChat</h1>
+@foreach (var u in Model)
+{
+    <div>
+        <h4>@u</h4>
+        <form method="post" asp-controller="Roles" asp-action="AddInChat">
+            <input type="hidden" name="name" value="@u" />
+            <button type="submit">
+                Submit
+            </button>
+        </form>
+    </div>
+}

@@ -4,12 +4,19 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Socket_MVC_Identity.Data;
 using Socket_MVC_Identity.Models;
 
 namespace Socket_MVC_Identity.Controllers
 {
     public class HomeController : Controller
     {
+        ApplicationDbContext context;
+        public HomeController()
+        {
+            context = new ApplicationDbContext(ApplicationDbContext.Opts());
+        }
+
         public IActionResult Index()
         {
             return View();
