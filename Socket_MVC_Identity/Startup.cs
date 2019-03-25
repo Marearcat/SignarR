@@ -14,6 +14,7 @@ using Socket_MVC_Identity.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Socket_MVC_Identity.Hubs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Socket_MVC_Identity
 {
@@ -45,7 +46,7 @@ namespace Socket_MVC_Identity
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            
             services.AddSignalR();
         }
 
